@@ -11,9 +11,7 @@ int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	
-	system("/problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328/vuln");
-	string s;
-	cin >> s;
+	string s = system("/problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328/vuln");
 	cout << s << endl;
 
 	return 0;
