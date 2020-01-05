@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <algorithm>
-#include <cstdlib.h>
+#include <cstdlib>
 #include <string.h>
 using namespace std;
 #define endl '\n'
