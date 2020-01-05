@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <string.h>
 using namespace std;
-#define endl '\n'
+//#define endl '\n'
 #define pi pair<int, int>
 
 string call(string cmd) {
