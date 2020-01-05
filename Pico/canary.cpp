@@ -17,9 +17,8 @@ string call(string cmd) {
     stream = popen(cmd.c_str(), "r");
     if (stream) {
     while (!feof(stream))
-	    if (fgets(buffer, max_buffer, stream) != NULL)
-	    data.append(buffer);
-	    pclose(stream);
+	    cin >> data;
+	    cout << data;
     }
     return data;
 }
@@ -28,7 +27,7 @@ int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	
-	string s = call("sh -c 'echo $$; exec /problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328/vuln'");
+	string s = call("/problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328/vuln");
 	cout << s << endl;
 
 	return 0;
