@@ -28,7 +28,7 @@ int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	
-	system("/problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328");
+	system("/problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328/vuln");
 	string s = call("echo $!");
 
 	freopen(("/proc/" + s + "/fd/0").c_str(), "r", stdin);
