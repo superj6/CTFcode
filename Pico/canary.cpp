@@ -1,42 +1,56 @@
 #include <iostream>
 #include <cstdio>
 #include <algorithm>
-#include <cstdlib>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/prctl.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include <string.h>
 using namespace std;
-//#define endl '\n'
+#define endl '\n'
 #define pi pair<int, int>
-
-string call(string cmd) {
-
-    string data;
-    FILE * stream;
-    const int max_buffer = 256;
-    char buffer[max_buffer];
-
-    stream = popen(cmd.c_str(), "r");
-    if (stream) {
-    while (!feof(stream))
-	    if (fgets(buffer, max_buffer, stream) != NULL)
-	    data.append(buffer);
-	    pclose(stream);
-    }
-    return data;
-}
 
 int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	
-	system("/problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328/vuln");
-	string s = call("echo $!");
-
-	freopen(("/proc/" + s + "/fd/0").c_str(), "r", stdin);
-	freopen(("/proc/" + s + "/fd/1").c_str(), "w", stdin);
+	pid_t pid = 0;
+	int inpipefd[2];
+	int outpipefd[2];
+	char buf[256];
+	char msg[256];
+	int status;
 	
-	cout << 5 << endl;
-	cin >> s;
-	cout << s << endl;
+	pipe(inpipefd);
+	pipe(outpipefd);
+	pid = fork();
+	if(pid == 0){
+		dup2(outpipefd[0], STDIN_FILENO);
+		dup2(inpipefd[1], STDOUT_FILENO);
+		dup2(inpipefd[1], STDOUT_FILENO);
+		
+		prctl(PR_SET_PDEATHSIG, SIGTERM);
+		
+		execl("/problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328/vuln", "vuln", (char*)NULL);
+		
+		exit(1);
+	}
+	
+	close(outpipefd[0]);
+	close(inpipefd[1]);
+	
+	read(inpipefd[0], buf, 256);
+	write(inpipefd[1], "1\n", 2);
+	read(inpipefd[0], msg, 256);
+	write(inpipefd[1], buf, strlen(buf));
+	read(inpipefd[1], msg, 256);
+	printf("%s\n", msg);
+	
+	kill(pid, SIGKILL);
+	waitpid(pid, &status, 0);
 
 	return 0;
 }
