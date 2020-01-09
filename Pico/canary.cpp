@@ -44,7 +44,7 @@ int main(){
 	
 	read(inpipefd[0], buf, 256);
 	printf("%s\n", buf);
-	write(outpipefd[1], "1\n", 2);
+	write(outpipefd[1], "64\n", 3);
 	read(inpipefd[0], msg, 256);
 	printf("%s\n", msg);
 	write(outpipefd[1], buf, strlen(buf));
