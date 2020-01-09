@@ -43,10 +43,12 @@ int main(){
 	close(inpipefd[1]);
 	
 	read(inpipefd[0], buf, 256);
-	write(inpipefd[1], "1\n", 2);
+	printf("%s\n", buf);
+	write(outpipefd[1], "1\n", 2);
 	read(inpipefd[0], msg, 256);
-	write(inpipefd[1], buf, strlen(buf));
-	read(inpipefd[1], msg, 256);
+	printf("%s\n", msg);
+	write(outpipefd[1], buf, strlen(buf));
+	read(inpipefd[0], msg, 256);
 	printf("%s\n", msg);
 	
 	kill(pid, SIGKILL);
