@@ -13,14 +13,14 @@ using namespace std;
 #define endl '\n'
 #define pi pair<int, int>
 
-pid_t pid = 0;
+pid_t pid;
 int inpipefd[2];
 int outpipefd[2];
 char buf[256];
-char msg[256];
 int status;
 
 void runcmd(string s, string arg = ""){
+	pid = 0;
 	pipe(inpipefd);
 	pipe(outpipefd);
 	pid = fork();
@@ -43,6 +43,16 @@ void runcmd(string s, string arg = ""){
 void killcmd(){
 	kill(pid, SIGKILL);
 	waitpid(pid, &status, 0);
+}
+
+string cmdin(){
+	read(inpipefd[0], buf, 256);
+	return string(buf);
+}
+
+void cmdout(string s){
+	s += '\n';
+	write(outpipefd[1], s.c_str(), (int)s.size());
 }
 
 int main(){
