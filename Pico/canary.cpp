@@ -19,7 +19,7 @@ int outpipefd[2];
 char buf[256];
 int status;
 
-void runcmd(string s = "", string arg = ""){
+void runcmd(string s = "/problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328/vuln", string arg = ""){
 	pid = 0;
 	pipe(inpipefd);
 	pipe(outpipefd);
