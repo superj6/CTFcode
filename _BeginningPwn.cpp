@@ -18,6 +18,7 @@ int inpipefd[2];
 int outpipefd[2];
 char buf[256];
 int status;
+string path;
 
 void runcmd(string s, string arg = ""){
 	pid = 0;
