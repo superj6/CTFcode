@@ -84,6 +84,16 @@ int main(){
 		}
 	}
 	
+	s += "\xed\x07\x00\x00";
+	
+	runcmd();
+	t = cmdin();
+	cmdout(s.size());
+	t = cmdin();
+	cmdout(s);
+	t = cmdin();
+	killcmd();
+	
 	cout << t << endl;
 
 	return 0;
