@@ -70,6 +70,7 @@ string cmdflag(string s, string f = "pico"){
 		cmdout(s);
 		read(2, buf, 256);
 		ret = string(buf);
+		cout << ret << endl;
 		killcmd();
 	}
 	return ret;
