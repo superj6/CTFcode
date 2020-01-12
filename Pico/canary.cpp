@@ -62,7 +62,7 @@ void cmdout(int x){
 
 string cmdflag(string s, string f = "pico"){
 	string ret = "";
-	while(ret.find(f) == string::npos){
+	//while(ret.find(f) == string::npos){
 		runcmd();
 		cmdin();
 		cmdout(s.size());
@@ -71,7 +71,7 @@ string cmdflag(string s, string f = "pico"){
 		ret = cmdin();
 		cout << ret << endl;
 		killcmd();
-	}
+	//}
 	return ret;
 }
 
