@@ -27,7 +27,7 @@ void runcmd(string s = "/problems/canary_3_257a2a2061c96a7fb8326dbbc04d0328/vuln
 	if(pid == 0){
 		dup2(outpipefd[0], STDIN_FILENO);
 		dup2(inpipefd[1], STDOUT_FILENO);
-		dup2(inpipefd[1], STDOUT_FILENO);
+		dup2(inpipefd[1], STDERR_FILENO);
 		
 		prctl(PR_SET_PDEATHSIG, SIGTERM);
 		
@@ -68,9 +68,7 @@ string cmdflag(string s, string f = "pico"){
 		cmdout(s.size());
 		cmdin();
 		cmdout(s);
-		read(2, buf, 256);
-		ret = string(buf);
-		cout << ret << endl;
+		ret = cmdin();
 		killcmd();
 	}
 	return ret;
