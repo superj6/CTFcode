@@ -69,7 +69,6 @@ string cmdflag(string s, string f = "pico"){
 		cmdin();
 		cmdout(s);
 		for(int i = 0; i < 50; i++) ret += cmdin();
-		cout << ret << endl;
 		killcmd();
 	}
 	return ret;
