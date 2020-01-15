@@ -55,6 +55,21 @@ void cmdout(string s){
 	write(outpipefd[1], s.c_str(), (int)s.size());
 }
 
+string cmdflag(string s, string f = ""){
+	string ret;
+	while(ret.find(f) == string::npos){
+		runcmd();
+		cmdin();
+		cmdout(s.size());
+		cmdin();
+		cmdout(s);
+		for(int i = 0; i < 50 && ret.find(f) == string::npos; i++) ret = cmdin();
+		killcmd();
+	}
+	return ret;
+}
+
+
 int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
