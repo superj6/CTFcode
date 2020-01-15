@@ -61,14 +61,14 @@ void cmdout(int x){
 }
 
 string cmdflag(string s, string f = "pico"){
-	string ret = "";
+	string ret;
 	while(ret.find(f) == string::npos){
 		runcmd();
 		cmdin();
 		cmdout(s.size());
 		cmdin();
 		cmdout(s);
-		for(int i = 0; i < 50; i++) ret += cmdin();
+		for(int i = 0; i < 50 && ret.find(f) == string::npos; i++) ret = cmdin();
 		killcmd();
 	}
 	return ret;
