@@ -70,6 +70,10 @@ void cmdout(string s){
 	write(outpipefd[1], s.c_str(), (int)s.size());
 }
 
+void cmdout(int x){
+	cmdout(to_string(x));
+}
+
 string cmdflag(string s, string f = ""){
 	string ret;
 	while(ret.find(f) == string::npos){
