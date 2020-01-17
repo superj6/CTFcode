@@ -19,7 +19,7 @@ int outpipefd[2];
 char buf[256];
 int status;
 
-void runcmd(string s = "", string arg = ""){
+void runcmd(string s = "", string arg0 = "", string arg1 = "", string arg2 = ""){
 	pid = 0;
 	pipe(inpipefd);
 	pipe(outpipefd);
@@ -31,7 +31,10 @@ void runcmd(string s = "", string arg = ""){
 		
 		prctl(PR_SET_PDEATHSIG, SIGTERM);
 		
-		execl(s.c_str(), arg.c_str(), (char*)NULL);
+		if(arg2 != "") execl(s.c_str(), s.c_str(), arg0.c_str(), arg1.c_str(), arg2.c_str(), (char*)NULL);
+		else if(arg1 != "") execl(s.c_str(), s.c_str(), arg0.c_str(), arg1.c_str(), (char*)NULL);
+		else if(arg0 != "") execl(s.c_str(), s.c_str(), arg0.c_str(), (char*)NULL);
+		else execl(s.c_str(), s.c_str(), (char*)NULL);
 		
 		exit(1);
 	}
