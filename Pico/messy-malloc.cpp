@@ -19,7 +19,7 @@ int outpipefd[2];
 char buf[256];
 int status;
 
-void runcmd(string s = "nc 2019shell1.picoctf.com 21899", string arg = ""){
+void runcmd(string s = "/bin/nc", string arg = "2019shell1.picoctf.com 21899"){
 	pid = 0;
 	pipe(inpipefd);
 	pipe(outpipefd);
