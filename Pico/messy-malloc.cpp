@@ -87,29 +87,29 @@ int main(){
 	string s;
 	
 	runcmd();
-	s += cmdin();
+	cmdin();
 	cmdout("login");
-	s += cmdin();
+	cmdin();
 	cmdout("26");
-	s += cmdin();
+	cmdin();
 	cmdout("abcdefghijklmnopqrstuvwxyz");
-	s += cmdin();
+	cmdin();
 	cmdout("print-flag");
-	s += cmdin();
+	s = cmdin();
+	cout << s << endl;
 	cmdout("logout");
-	s += cmdin();
+	cmdin();
 	cmdout("login");
-	s += cmdin();
+	cmdin();
 	cmdout("3");
-	s += cmdin();
+	cmdin();
 	cmdout("aaa");
-	s += cmdin();
+	cmdin();
 	cmdout("print-flag");
-	s += cmdin();
+	s = cmdin();
+	cout << s << endl;
 	cmdout("quit");
 	killcmd();
-	
-	cout << s << endl;
 
 	return 0;
 }
