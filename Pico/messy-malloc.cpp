@@ -89,10 +89,10 @@ int main(){
 	cin.tie(NULL);
 	
 	string s, t;
-	t += string(1, '\x00') + "\x20\x60" + string(5, '\x00');
+	t += "aaaaaaaa";
 	t += "\x52\x4f\x4f\x54\x5f\x41\x43\x43";
 	t += "\x45\x53\x53\x5f\x43\x4f\x44\x45";
-	t += "\xef\xbe\xad\xde\xef\xbe\xad\xde";
+	t += "aaaaaaaa";
 	
 	runcmd();
 	cmdin();
