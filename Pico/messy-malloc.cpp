@@ -106,7 +106,7 @@ int main(){
 	cmdin();
 	cmdout("login");
 	cmdin();
-	cmdout("3");
+	cmdout("16");
 	cmdin();
 	cmdout("aaa");
 	cmdin();
