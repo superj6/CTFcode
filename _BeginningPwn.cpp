@@ -48,8 +48,7 @@ void killcmd(){
 	waitpid(pid, &status, 0);
 }
 
-void delay(int milliseconds)
-{
+void delay(int milliseconds){
     long pause;
     clock_t now,then;
 
@@ -64,7 +63,6 @@ string cmdin(){
 	read(inpipefd[0], buf, 256);
 	return string(buf);
 }
-
 
 void cmdout(string s){
 	s += '\n';
