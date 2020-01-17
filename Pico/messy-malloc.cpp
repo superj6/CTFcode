@@ -48,7 +48,19 @@ void killcmd(){
 	waitpid(pid, &status, 0);
 }
 
+void delay(int milliseconds)
+{
+    long pause;
+    clock_t now,then;
+
+    pause = milliseconds*(CLOCKS_PER_SEC/1000);
+    now = then = clock();
+    while( (now-then) < pause )
+        now = clock();
+}
+
 string cmdin(){
+	delay(50);
 	read(inpipefd[0], buf, 256);
 	return string(buf);
 }
