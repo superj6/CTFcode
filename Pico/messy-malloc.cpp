@@ -27,7 +27,7 @@ void runcmd(string s = "/bin/nc", string arg0 = "2019shell1.picoctf.com", string
 	if(pid == 0){
 		dup2(outpipefd[0], STDIN_FILENO);
 		dup2(inpipefd[1], STDOUT_FILENO);
-		dup2(inpipefd[1], STDOUT_FILENO);
+		dup2(inpipefd[1], STDERR_FILENO);
 		
 		prctl(PR_SET_PDEATHSIG, SIGTERM);
 		
