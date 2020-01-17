@@ -95,7 +95,7 @@ int main(){
 	cmdin();
 	cmdout("login");
 	cmdin();
-	cmdout("26");
+	cmdout(t.size());
 	cmdin();
 	cmdout(t);
 	cmdin();
