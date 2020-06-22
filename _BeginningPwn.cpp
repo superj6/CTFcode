@@ -66,6 +66,16 @@ string cmdin(){
 	return string(buf);
 }
 
+int cmdint(){
+	int ret = 0;
+	while(1){
+		read(inpipefd[0], buf, 1);
+		if(buf[0] == ' ' || buf[0] == '\n') break;
+		ret = 10 * ret + buf[0] - '0';
+	}
+	return ret;
+}
+
 void cmdout(string s){
 	s += '\n';
 	write(outpipefd[1], s.c_str(), (int)s.size());
