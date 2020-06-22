@@ -75,16 +75,6 @@ void cmdout(int x){
 	cmdout(to_string(x));
 }
 
-string cmdflag(string s, string f = ""){
-	string ret;
-	while(ret.find(f) == string::npos){
-		runcmd();
-		ret = cmdin();
-		killcmd();
-	}
-	return ret;
-}
-
 int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
