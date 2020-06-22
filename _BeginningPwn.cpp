@@ -12,6 +12,8 @@
 using namespace std;
 #define endl '\n'
 #define pi pair<int, int>
+#define f first
+#define s second
 
 pid_t pid;
 int inpipefd[2];
