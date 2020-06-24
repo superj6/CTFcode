@@ -11,6 +11,7 @@
 #include <string.h>
 using namespace std;
 #define endl '\n'
+#define ll long long
 #define pi pair<int, int>
 #define f first
 #define s second
@@ -46,6 +47,8 @@ void runcmd(string s = "", string arg0 = "", string arg1 = "", string arg2 = "")
 }
 
 void killcmd(){
+	close(outpipefd[1]);
+	close(inpipefd[0]);
 	kill(pid, SIGKILL);
 	waitpid(pid, &status, 0);
 }
@@ -85,6 +88,7 @@ void cmdout(int x){
 	cmdout(to_string(x));
 }
 
+//format '\x00' correctly
 int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
