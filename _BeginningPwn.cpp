@@ -88,6 +88,15 @@ void cmdout(int x){
 	cmdout(to_string(x));
 }
 
+string adr(ll x, int y = 16){
+	string ret;
+	while(y--){
+		ret += (char)(x % 256);
+		x /= 256;
+	}
+	return ret;
+}
+
 //format '\x00' correctly
 int main(){
 	ios::sync_with_stdio(false);
