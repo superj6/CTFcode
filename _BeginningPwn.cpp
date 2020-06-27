@@ -65,6 +65,7 @@ void delay(int milliseconds){
 
 string cmdin(){
 	delay(50);
+	memset(buf, 0, sizeof(buf));
 	read(inpipefd[0], buf, 256);
 	return string(buf);
 }
@@ -88,11 +89,20 @@ void cmdout(int x){
 	cmdout(to_string(x));
 }
 
-string adr(ll x, int y = 16){
+string adr(ll x, int y = 8){
 	string ret;
 	while(y--){
 		ret += (char)(x % 256);
 		x /= 256;
+	}
+	return ret;
+}
+
+ll hex(string s, int y = 8){
+	ll ret = 0;
+	y = min(y, (int)s.size());
+	while(y--){
+		ret = 256 * ret + (256 + s[y]) % 256;
 	}
 	return ret;
 }
