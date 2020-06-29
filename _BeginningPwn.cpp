@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 using namespace std;
-#define endl '\n'
+//#define endl '\n'
 #define ll long long
 #define pi pair<int, int>
 #define f first
@@ -64,7 +64,7 @@ void delay(int milliseconds){
 }
 
 string cmdin(){
-	delay(50);
+	delay(200);
 	memset(buf, 0, sizeof(buf));
 	read(inpipefd[0], buf, 256);
 	return string(buf);
@@ -87,6 +87,17 @@ void cmdout(string s){
 
 void cmdout(int x){
 	cmdout(to_string(x));
+}
+
+void interact(){
+	string s;
+	while(1){
+		if(getline(cin, s)){
+			if(s == "die") break;
+			cmdout(s);
+			cout << cmdin() << endl;
+		}
+	}
 }
 
 string adr(ll x, int y = 8){
