@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <string.h>
+#include <vector>
 using namespace std;
 //#define endl '\n'
 #define ll long long
@@ -22,28 +22,40 @@ int outpipefd[2];
 char buf[256];
 int status;
 
-void runcmd(string s = "", string arg0 = "", string arg1 = "", string arg2 = ""){
-	pid = 0;
-	pipe(inpipefd);
-	pipe(outpipefd);
-	pid = fork();
-	if(pid == 0){
-		dup2(outpipefd[0], STDIN_FILENO);
-		dup2(inpipefd[1], STDOUT_FILENO);
-		dup2(inpipefd[1], STDERR_FILENO);
-		
-		prctl(PR_SET_PDEATHSIG, SIGTERM);
-		
-		if(arg2 != "") execl(s.c_str(), s.c_str(), arg0.c_str(), arg1.c_str(), arg2.c_str(), (char*)NULL);
-		else if(arg1 != "") execl(s.c_str(), s.c_str(), arg0.c_str(), arg1.c_str(), (char*)NULL);
-		else if(arg0 != "") execl(s.c_str(), s.c_str(), arg0.c_str(), (char*)NULL);
-		else execl(s.c_str(), s.c_str(), (char*)NULL);
-		
-		exit(1);
-	}
-	
-	close(outpipefd[0]);
-	close(inpipefd[1]);
+void runcmd(string s = "/bin/script", vector<string> arg = {"--return", "--quiet", "-c", "", "/dev/null"}){
+        pid = 0;
+        pipe(inpipefd);
+        pipe(outpipefd);
+        pid = fork();
+        if(pid == 0){
+                dup2(outpipefd[0], STDIN_FILENO);
+                dup2(inpipefd[1], STDOUT_FILENO);
+                dup2(inpipefd[1], STDERR_FILENO);
+
+                prctl(PR_SET_PDEATHSIG, SIGTERM);
+
+                const char* sc = s.c_str();
+                const char** argc = new const char* [arg.size() + 2];
+                argc[0] = sc;
+                for(int i = 0; i < arg.size(); i++) argc[i + 1] = arg[i].c_str();
+                argc[arg.size() + 1] = NULL;
+
+                execv(sc, (char **)argc);
+
+                exit(1);
+        }
+
+        close(outpipefd[0]);
+        close(inpipefd[1]);
+
+        signal(SIGPIPE, SIG_IGN);
+        fcntl(inpipefd[0], F_SETFL, O_NONBLOCK);
+}
+
+
+bool alive(){
+	waitpid(pid, &status, WNOHANG);
+	return !status;
 }
 
 void killcmd(){
@@ -74,7 +86,7 @@ int cmdint(){
 	int ret = 0;
 	while(1){
 		read(inpipefd[0], buf, 1);
-		if(buf[0] == ' ' || buf[0] == '\n') break;
+		if(buf[0] < '0' || buf[0] > '9') break;
 		ret = 10 * ret + buf[0] - '0';
 	}
 	return ret;
@@ -92,10 +104,10 @@ void cmdout(int x){
 void interact(){
 	string s;
 	while(1){
+		cout << cmdin() << flush;
 		if(getline(cin, s)){
 			if(s == "die") break;
 			cmdout(s);
-			cout << cmdin() << endl;
 		}
 	}
 }
