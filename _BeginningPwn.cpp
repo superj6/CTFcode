@@ -6,6 +6,7 @@
 #include <sys/prctl.h>
 #include <signal.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #include <string.h>
 #include <stdio.h>
 #include <vector>
