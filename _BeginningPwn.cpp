@@ -23,7 +23,7 @@ int outpipefd[2];
 char buf[256];
 int status;
 
-void runcmd(string s = "/bin/script", vector<string> arg = {"--return", "--quiet", "-c", "", "/dev/null"}){
+void runcmd(string s = "/usr/bin/script", vector<string> arg = {"-q", "-e", "-c", "", "/dev/null"}){
         pid = 0;
         pipe(inpipefd);
         pipe(outpipefd);
@@ -116,6 +116,7 @@ void interact(){
 string adr(ll x, int y = 8){
 	string ret;
 	while(y--){
+		ret += '\x16';
 		ret += (char)(x % 256);
 		x /= 256;
 	}
@@ -131,7 +132,8 @@ ll hex(string s, int y = 8){
 	return ret;
 }
 
-//format '\x00' correctly
+//format special chars correctly
+//add '\x16' for 'script' unbuffer
 int main(){
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
