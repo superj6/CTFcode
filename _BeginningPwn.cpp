@@ -27,6 +27,11 @@ void runcmd(string s = "", vector<string> arg = {}, vector<string> env = {}){
         struct termios tios;
         tcgetattr(master, &tios);
         tios.c_lflag = 0;
+	tios.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP
+            | INLCR | IGNCR | ICRNL | IXON);
+        tios.c_oflag &= ~OPOST;
+        tios.c_cflag &= ~(CSIZE | PARENB);
+        tios.c_cflag |= CS8;
         tcsetattr(master, TCSANOW, &tios);
 
         if(pid == 0){
