@@ -86,6 +86,24 @@ ll cmdint(){
         return ret;
 }
 
+ll cmdhex(bool f = 0){
+        if(f){
+                string s = "0x";
+                for(int i = 0; i < s.size(); i++){
+                        read(master, buf, 1);
+                        if(buf[0] != s[i]) return 0;
+                }
+        }
+	ll ret = 0;
+        while(1){
+                read(master, buf, 1);
+                if(!(buf[0] >= '0' && buf[0] <= '9') && !(buf[0] >= 'a' && buf[0] <= 'f')) break;
+                ret = 16 * ret + (buf[0] > '9' ? buf[0] - 'a' + 10 : buf[0] - '0');
+        }
+        return ret;
+}
+
+
 void cmdout(string s){
         s += '\n';
         write(master, s.c_str(), (int)s.size());
@@ -125,6 +143,7 @@ ll hex(string s, int y = 8){
 }
 
 //format special chars correctly
+//keep large adresses unsigned
 //compile with '-lutil'
 int main(){
         ios::sync_with_stdio(false);
