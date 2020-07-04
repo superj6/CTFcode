@@ -2,7 +2,6 @@
 #include <cstdio>
 #include <algorithm>
 #include <unistd.h>
-#include <util.h>
 #include <sys/wait.h>
 #include <sys/prctl.h>
 #include <pty.h>
