@@ -77,8 +77,8 @@ string cmdin(){
         return string(buf);
 }
 
-int cmdint(){
-        int ret = 0;
+ll cmdint(){
+        ll ret = 0;
         while(1){
                 read(master, buf, 1);
                 if(buf[0] < '0' || buf[0] > '9') break;
