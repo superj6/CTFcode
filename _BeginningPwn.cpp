@@ -2,11 +2,12 @@
 #include <cstdio>
 #include <algorithm>
 #include <unistd.h>
+#include <util.h>
 #include <sys/wait.h>
 #include <sys/prctl.h>
+#include <pty.h>
 #include <signal.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <string.h>
 #include <stdio.h>
 #include <vector>
@@ -18,21 +19,18 @@ using namespace std;
 #define s second
 
 pid_t pid;
-int inpipefd[2];
-int outpipefd[2];
+int master;
 char buf[256];
 int status;
 
-void runcmd(string s = "/usr/bin/script", vector<string> arg = {"-q", "-e", "-c", "", "/dev/null"}){
-        pid = 0;
-        pipe(inpipefd);
-        pipe(outpipefd);
-        pid = fork();
-        if(pid == 0){
-                dup2(outpipefd[0], STDIN_FILENO);
-                dup2(inpipefd[1], STDOUT_FILENO);
-                dup2(inpipefd[1], STDERR_FILENO);
+void runcmd(string s = "", vector<string> arg = {}, vector<string> env = {}){
+        pid = forkpty(&master, NULL, NULL, NULL);
+        struct termios tios;
+        tcgetattr(master, &tios);
+        tios.c_lflag = 0;
+        tcsetattr(master, TCSANOW, &tios);
 
+        if(pid == 0){
                 prctl(PR_SET_PDEATHSIG, SIGTERM);
 
                 const char* sc = s.c_str();
@@ -40,30 +38,27 @@ void runcmd(string s = "/usr/bin/script", vector<string> arg = {"-q", "-e", "-c"
                 argc[0] = sc;
                 for(int i = 0; i < arg.size(); i++) argc[i + 1] = arg[i].c_str();
                 argc[arg.size() + 1] = NULL;
+		const char** envc = new const char* [env.size() + 1];
+                for(int i = 0; i < env.size(); i++) envc[i] = env[i].c_str();
+                envc[env.size()] = NULL;
 
-                execv(sc, (char **)argc);
+                execve(sc, (char **)argc, (char **)envc);
 
                 exit(1);
         }
 
-        close(outpipefd[0]);
-        close(inpipefd[1]);
-
         signal(SIGPIPE, SIG_IGN);
-        fcntl(inpipefd[0], F_SETFL, O_NONBLOCK);
 }
 
 
 bool alive(){
-	waitpid(pid, &status, WNOHANG);
-	return !status;
+        waitpid(pid, &status, WNOHANG);
+        return !status;
 }
 
 void killcmd(){
-	close(outpipefd[1]);
-	close(inpipefd[0]);
-	kill(pid, SIGKILL);
-	waitpid(pid, &status, 0);
+        kill(pid, SIGKILL);
+        waitpid(pid, &status, 0);
 }
 
 void delay(int milliseconds){
@@ -77,67 +72,65 @@ void delay(int milliseconds){
 }
 
 string cmdin(){
-	delay(200);
-	memset(buf, 0, sizeof(buf));
-	read(inpipefd[0], buf, 256);
-	return string(buf);
+        memset(buf, 0, sizeof(buf));
+        read(master, buf, 256);
+        return string(buf);
 }
 
 int cmdint(){
-	int ret = 0;
-	while(1){
-		read(inpipefd[0], buf, 1);
-		if(buf[0] < '0' || buf[0] > '9') break;
-		ret = 10 * ret + buf[0] - '0';
-	}
-	return ret;
+        int ret = 0;
+        while(1){
+                read(master, buf, 1);
+                if(buf[0] < '0' || buf[0] > '9') break;
+                ret = 10 * ret + buf[0] - '0';
+        }
+        return ret;
 }
 
 void cmdout(string s){
-	s += '\n';
-	write(outpipefd[1], s.c_str(), (int)s.size());
+        s += '\n';
+        write(master, s.c_str(), (int)s.size());
 }
 
 void cmdout(int x){
-	cmdout(to_string(x));
+        cmdout(to_string(x));
 }
 
 void interact(){
-	string s;
-	while(1){
-		cout << cmdin() << flush;
-		if(getline(cin, s)){
-			if(s == "die") break;
-			cmdout(s);
-		}
-	}
+        string s;
+        while(1){
+                cout << cmdin() << flush;
+                if(getline(cin, s)){
+                        if(s == "die") break;
+                        cmdout(s);
+                }
+        }
 }
 
 string adr(ll x, int y = 8){
-	string ret;
-	while(y--){
-		ret += '\x16';
-		ret += (char)(x % 256);
-		x /= 256;
-	}
-	return ret;
+        string ret;
+        while(y--){ 
+                ret += (char)(x % 256);
+                x /= 256;
+        }
+        return ret;
 }
 
 ll hex(string s, int y = 8){
-	ll ret = 0;
-	y = min(y, (int)s.size());
-	while(y--){
-		ret = 256 * ret + (256 + s[y]) % 256;
-	}
-	return ret;
+        ll ret = 0;
+        y = min(y, (int)s.size());
+        while(y--){
+                ret = 256 * ret + (256 + s[y]) % 256;
+        }
+        return ret;
 }
 
 //format special chars correctly
-//add '\x16' for 'script' unbuffer
+//compile with '-lutil'
 int main(){
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+        ios::sync_with_stdio(false);
+        cin.tie(NULL);
 	
-	
-	return 0;
+
+        return 0;
 }
